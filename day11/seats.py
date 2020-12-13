@@ -1,7 +1,9 @@
 import sys
+import timeit
 
 initial_state = [[char for char in line.strip()] for line in sys.stdin]
 
+start = timeit.default_timer()
 
 max_row = len(initial_state)
 max_col = len(initial_state[0])
@@ -32,9 +34,10 @@ for state in states(initial_state):
     prev_state = state
 
 print('part 1: {}'.format(sum(state[row][col] == '#' for row in range(max_row) for col in range(max_col))))
+print('time: {}'.format(timeit.default_timer() - start))
 
 
-
+start = timeit.default_timer()
 
 current_idx = 0
 seat_state = [[[initial_state[row][col], None, []] for col in range(max_col)] for row in range(max_row)]
@@ -72,11 +75,10 @@ def next_state2(state):
                 num_occupied = sum(s[idx] == '#' for s in seat[2])
                 if seat[idx] == 'L' and num_occupied == 0:
                     seat[not idx] = '#'
-                    continue
-                if seat[idx] == '#' and num_occupied >= 5:
+                elif seat[idx] == '#' and num_occupied >= 5:
                     seat[not idx] = 'L'
-                    continue
-                seat[not idx] = seat[idx]
+                else:
+                    seat[not idx] = seat[idx]
         idx = not idx
         yield
 
@@ -85,3 +87,4 @@ for _ in next_state2(seat_state):
         break
 
 print('part 2: {}'.format(sum(seat_state[row][col][0] == '#' for row in range(max_row) for col in range(max_col))))
+print('time: {}'.format(timeit.default_timer() - start))
